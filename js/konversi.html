@@ -1,0 +1,31 @@
+<HTML>
+<HEAD>
+<TITLE> Mengkonversi Nilai Angka menjadi Nilai Huruf </TITLE>
+</HEAD>
+	<SCRIPT language="Javascript">
+		function test(){
+			var val1= document.kirim.nilai.value
+			if (val1>=0&&40)
+				document.kirim.konversi.value="E"
+			if (val1>40&&55)
+				document.kirim.konversi.value="D"
+			if (val1>55&&60)
+				document.kirim.konversi.value="C"
+			if (val1>60&&65)
+				document.kirim.konversi.value="BC"
+			if (val1>65&&70)
+				document.kirim.konversi.value="B"
+			if (val1>70&&80)
+				document.kirim.konversi.value="AB"
+			if (val1>80&&100)
+				document.kirim.konversi.value="A"
+		}
+	</SCRIPT>
+<BODY>
+<form method ="POST" name="kirim">
+<p> NILAI ANGKA <input type="text" name="nilai" size="20">
+NILAI HURUF <input type="text" name="konversi" size="20"> </p>
+<p><input type="button" value="KONVERSI" name="B1" onclick=test()> </p>
+</form>	
+</BODY>
+</HTML>
