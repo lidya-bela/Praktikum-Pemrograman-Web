@@ -1,0 +1,31 @@
+<html>
+<head>
+	<script type="text/javascript" src="jquery-3.6.0.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+				$(".tombol_sembunyi").click(function(){
+					$("#picture_1").hide("slow");
+				})
+				$(".tombol_tampil").click(function(){
+					$("#picture_1").show("slow");
+				});
+				$(".tombol_sembunyi2").click(function(){
+					$("#picture_2").hide("slow");
+				})
+				$(".tombol_tampil2").click(function(){
+					$("#picture_2").show("slow");
+				});
+		});
+	</script>
+</head>
+<body>
+	<button class="tombol_sembunyi">Sembunyikan</button>
+	<button class="tombol_tampil">Tampilkan</button>
+	<br> 
+	<br>
+	<button class="tombol_sembunyi2">Sembunyikan</button>
+	<button class="tombol_tampil2">Tampilkan</button>
+	<p><img id="picture_1" src="Gambar/Gambar1.jpg" width=400px/></p>
+	<p><img id="picture_2" src="Gambar/Gambar2.jpg" width=400px/></p>
+</body>
+</html>
