@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>game dengan Javascript dan HTML5</title>
+	<style>
+		/* berfungsi untuk mengatur sisi dalam dan luar dari sebuah elemen */
+		*{padding: 0; margin-top:4%;}
+		/* berfungsi untuk menampilkan background berupa gambar, menampilkan border, serta mengatur margin pada canvas.
+		Kemudian terdapat properti display yang berfungsi untuk mengatur bagaimana tampilnya suatu elemen pada halaman website */
+		canvas {background-image: url('Gambar_praktikum5/background.png'); border: 4px solid #2D4865; display: block; margin: 0 auto;}
+	</style>
+	</head>
+		<body>
+			<!-- membuat canvas dan memberikan ukuran pada canvas dengan tinggi 370 pixel dan lebar 550 pixel-->
+			<canvas id="myCanvas" width="550" height="370"></canvas>
+			<script>
+				//memiliki fungsi untuk memilih elemen dengan idnya yaitu myCanvas
+				var canvas = document.getElementById('myCanvas');
+				//object context digunakan untuk menggambar di canvas
+				var context = canvas.getContext('2d');
+				//membuat variabel
+				var speed= 10;
+				gameSpeed = 100;
+				var bird = {
+					// x dan y berfungsi untuk menandakan koordinat dari bird
+					x : canvas.width / 2,
+					y : canvas.height / 2,
+					vx : 0,
+					//vy berfungsi untuk menandakan kecepatan vertikal bird yang di set 1
+					vy : 1};
+					//mendeklarasikan variabel yang dibutuhkan
+					var pip = [];
+					var gravity = 0.2;
+					var bounce = 4;
+					var distance = 100;
+					var dir = 'left';
+					//event onkeydown untuk memberikan aksi, menjalankan statement saat user menekan tombol arah pada keyboard
+					document.onkeydown = function (e){
+						//pengecekan kondisi
+						if(!e){
+							e = window.e;
+						}
+						var code = e.keyCode;
+						if(e.charCode && codee == 0){
+							code = e.charCode;
+						}
+						switch(code){
+							case 37://left
+							if(dir!='right')
+								dir='left';
+							//break sebagai akhir dari switch statement (switch case dihentikan menggunakan break)
+							break;
+							case 38:
+							if(dir!='down')
+								dir ='up';
+							//break sebagai akhir dari switch statement (switch case dihentikan menggunakan break)
+							break;
+							case 39:
+							if(dir!='left')
+								dir='right';
+							//break sebagai akhir dari switch statement (switch case dihentikan menggunakan break)
+							break;
+							case 40:
+							if(dir!='up')
+								dir ='down';
+							//break sebagai akhir dari switch statement (switch case dihentikan menggunakan break)
+							break;
+						}
+					}
+					var b = 0.8;
+					//membuat variabel dengan nama variabel image
+					var image = new Image();
+					//berfungsi untuk menampilkan gambar dengan src berisikan alamat dari gambar yang akan ditampilkan
+					image.src= ("Gambar_praktikum5/gambar.png");
+					//membuat function untuk membuat bird
+					function makeBird(){
+						//digunakan untuk membuat garis baru
+						context.beginPath();
+						//digunakan untuk menggambar gambar bird di canvas
+						context.drawImage(image, bird.x, bird.y, 30, 30);
+						//metode untuk menggambar garis mulai dari titik terakhir sampai ke titik awal
+						context.closePath();
+						bird.y += bird.vy;
+						bird.vy += gravity;
+						//pengecekan kondisi
+						if(dir=='up'){
+							bird.vy = -bounce;
+							dir = '';
+						}
+						if(bird.y + 10 >= canvas.height){
+							// dir = 'up';
+						}
+					}
+					//mendeklarasikan variabel dan membuat warna gradient linier untuk mengisi warna pipa atas
+					var grd = context.createLinearGradient(0,0,100,300);
+					//berfungsi untuk menentukan posisi gradien antara 0-1 dan menentukan berhentinya warna serta posisi
+					//disepanjang gradien
+					grd.addColorStop(0, "#FDD51E");
+					grd.addColorStop(1, "#FB6602");
+					//mendeklarasikan variabel dan membuat warna gradient linier untuk mengisi warna pipa bawah
+					var grd1 = context.createLinearGradient(0,300,50,0);
+					//berfungsi untuk menentukan posisi gradien antara 0-1 dan menentukan berhentinya warna serta posisi
+					//disepanjang gradien
+					grd1.addColorStop(0, "#478BA2");
+					grd1.addColorStop(1, "#DE5B6D");
+					//berfungsi untuk membuat pipa
+					function makePip(){
+						for (p of pip){
+							//digunakan untuk membuat garis baru
+							context.beginPath();
+							//untuk mengisi warna pipa atas
+							context.fillStyle= grd;
+							//method fillRect() untuk menggambar titik pada canvas
+							context.fillRect(p.top.x, p.top.y, p.top.width, p.top.height);
+							//digunakan untuk menggambar garis mulai dari titik terakhir sampai ke titik awal
+							context.closePath();
+							p.bottom.y = p.top.height +distance;
+							p.bottom.height = (canvas.height - p.bottom.y);
+							//digunakan untuk membuat garis baru
+							context.beginPath();
+							//untuk mengisi warna pipa bawah
+							context.fillStyle = grd1;
+							//method fillRect() untuk menggambar titik pada canvas
+							context.fillRect(p.bottom.x, p.bottom.y, p.bottom.width,p.bottom.height);
+							//digunakan untuk menggambar garis mulai dari titik terakhir sampai ke titik awal
+							context.closePath();
+							p.bottom.x -= 1;
+							p.top.x -=1;
+							//pengecekan kondisi menggunakan if
+							if(p.top.x < -10){
+								pip.shift();
+							}
+							//pengecekan kondisi menggunakan if
+							if(isCollideB(bird, p.bottom) || isCollideT(bird, p.top) || bird.y +10>= canvas.height){
+								alert ('Your Score: '+score);
+								window.location.reload();
+							}
+							//pengecekan kondisi menggunakan if
+							if(score % 10 == 0){
+								console.log(distance);
+								score += 1;
+								distance -= 5;
+							}
+						}
+					}
+					//fungsi isCollide untuk mengatur ketika bird bertabrakan dengan pipa dengan posisi tertentu
+					function isCollideB(b,p){
+						return(
+							(b.x +10 > p.x) &&
+							(b.x < p.x+10) &&
+							(b.y > p.y || b.y +10 >p.y) );
+					}
+					function isCollideT(b,p){
+						return(
+							(b.x +10 > p.x) &&
+							(b.x < p.x+10) && 
+							(b.y < p.y + p.height)
+							);
+					}
+					function rnd(min, max){
+						var r = Math.round(Math.random() * (max - min)+ min);
+						return (r-r% speed);
+					}
+					//mendeklarasikan variabel
+					var score =0;
+					var frame =0;
+					//berfungsi untuk membuat function yang mana akan memanggil semua function
+					(function loop() {
+						requestAnimationFrame(function(){
+						//berfungsi untuk menghapus semua isi canvas
+						context.clearRect (0, 0, canvas.width, canvas.height);
+						//pengecekan kondisi
+						if(frame % gameSpeed == 0) {
+							//berfungsi untuk menambah elemen pipa atas dan bawah disebelah paling kanan canvas
+							pip.push({
+								top:{
+									x : canvas.width,
+									y : 0,
+									height : rnd(70,140),
+									width : 40,
+								},
+								bottom : {
+									x : canvas.width, y : 0,
+									height : rnd(100,160), 
+									width : 40,
+								}
+							});
+							score++;
+						}
+						//memanggil function makeBird(), makePip(), dan loop()
+						makeBird();
+						makePip();
+						frame++;
+						loop();
+					})
+				}) ();
+			</script>
+		</body>
+</html>
